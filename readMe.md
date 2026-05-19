@@ -74,3 +74,36 @@ npm install -g wscat
 ```bash
 wscat -c ws://localhost:8080
 ```
+
+### examples of event listeners in Sockets
+```js
+ const statusEl = document.getElementById('status');
+    const log = document.getElementById('log');
+    const input = document.getElementById('message-input');
+    // initiate the handshake
+    const socket = new WebSocket('ws://localhost:8080');
+
+    const  appendLog = (label, message) => {
+        const entry = `${new Date().toLocaleTimeString()} ${label} ${message}\n`;
+        log.textContent = entry + log.textContent;
+    }
+
+    socket.addEventListener('open', ()=> {
+        statusEl.textContent= 'Connected: ws://localhost:8080';
+        statusEl.className='status-on';
+        appendLog('[SYSTEM]', 'Tunnel Established.')
+
+    });
+
+    socket.addEventListener('close', ()=> {
+        statusEl.textContent= 'Disconnected';
+        statusEl.className='status-off';
+        appendLog('[SYSTEM]', 'Tunnel Dead.')
+
+    });
+
+    socket.addEventListener('message', (e)=> {
+        appendLog('[Received]',e.data);
+    })
+```
+ 
